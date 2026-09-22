@@ -6,15 +6,20 @@ import { EcoPulse } from './components/EcoPulse';
 import { EcoDiag } from './components/EcoDiag';
 import { EcoSim } from './components/EcoSim';
 import { EcoDash } from './components/EcoDash';
+import { EcoMainDashboard } from './components/EcoMainDashboard';
+import { EcoMockupViewer } from './components/EcoMockupViewer';
 import { EcoProjects } from './components/EcoProjects';
 import { EcoAction } from './components/EcoAction';
 import { EcoEdu } from './components/EcoEdu';
 import { EcoCommunity } from './components/EcoCommunity';
 import { EcoAlerts } from './components/EcoAlerts';
 import { EcoCertData } from './components/EcoCertData';
+import { EcoForms } from './components/EcoForms';
+import { PhpMysqlStack } from './components/PhpMysqlStack';
 import { OccurrenceModal } from './components/OccurrenceModal';
 import { ProjectModal } from './components/ProjectModal';
 import { EcoBotModal } from './components/EcoBotModal';
+import { GeminiChatbot } from './components/GeminiChatbot';
 
 import {
   Occurrence,
@@ -42,8 +47,8 @@ import {
 
 export const App: React.FC = () => {
   // Navigation & Role states
-  const [activeTab, setActiveTab] = useState<string>('territorio');
-  const [activeRole, setActiveRole] = useState<UserRole>('cidadao');
+  const [activeTab, setActiveTab] = useState<string>('dashboard');
+  const [activeRole, setActiveRole] = useState<UserRole>('admin');
   const [activeCycleStage, setActiveCycleStage] = useState<CycleStage>('OBSERVAR');
 
   // Sub-tab states for navigation groupings
@@ -305,6 +310,29 @@ export const App: React.FC = () => {
         )}
 
         {activeTab === 'dashboard' && (
+          <EcoMainDashboard
+            occurrences={occurrences}
+            projects={projects}
+            onSelectOccurrence={(occ) => setSelectedOccurrence(occ)}
+            onSelectProject={(proj) => setSelectedProject(proj)}
+            onNewOccurrence={() => {
+              setActiveTab('territorio');
+              setTerritorySubTab('cidadao');
+            }}
+            onNewProject={() => {
+              setActiveTab('projetos');
+              setProjectsSubTab('projetos');
+            }}
+            onNavigateToTab={(tab) => setActiveTab(tab)}
+            onOpenEcoBot={() => setActiveTab('ecobot')}
+          />
+        )}
+
+        {activeTab === 'mockups' && (
+          <EcoMockupViewer onNavigateToTab={(tab) => setActiveTab(tab)} />
+        )}
+
+        {activeTab === 'analitico' && (
           <EcoDash
             activeRole={activeRole}
             occurrences={occurrences}
@@ -338,10 +366,42 @@ export const App: React.FC = () => {
 
         {activeTab === 'alertas' && <EcoAlerts />}
 
+        {activeTab === 'forms' && <EcoForms />}
+
+        {activeTab === 'php-mysql' && <PhpMysqlStack />}
+
         {activeTab === 'educacao' && <EcoEdu />}
 
         {activeTab === 'dados-api' && (
           <EcoCertData occurrences={occurrences} />
+        )}
+
+        {activeTab === 'ecobot' && (
+          <section className="space-y-6">
+            <div className="bg-linear-to-r from-slate-900 via-slate-800 to-emerald-950 rounded-2xl p-6 text-white shadow-xl border border-slate-700/60">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div>
+                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-semibold mb-3">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>Google Gemini 3.5 & Grounding Ativo</span>
+                  </div>
+                  <h1 className="text-2xl font-black tracking-tight text-white sm:text-3xl">
+                    EcoBot MZ • Assistente de Inteligência Ambiental
+                  </h1>
+                  <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-3xl leading-relaxed">
+                    Chat multi-turn com papéis especializados (Fiscal da Lei 20/97, Gestor de Conservação, Cientista Climático e Facilitador Comunitário), suporte a pesquisa em tempo real com <strong>Google Search Grounding</strong> e locais verificados com <strong>Google Maps Grounding</strong>.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2 self-start md:self-auto">
+                  <span className="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-mono font-bold">
+                    Multi-Turn & Grounding
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <GeminiChatbot embedded={true} />
+          </section>
         )}
       </main>
 

@@ -12,7 +12,14 @@ import {
   Sparkles,
   Menu,
   X,
-  CheckCircle2
+  CheckCircle2,
+  ClipboardList,
+  Database,
+  Search,
+  Sun,
+  Layers,
+  LayoutDashboard,
+  MessageSquare
 } from 'lucide-react';
 import { UserRole, CycleStage } from '../types';
 
@@ -58,14 +65,17 @@ export const Navbar: React.FC<NavbarProps> = ({
   };
 
   const navItems = [
-    { id: 'territorio', label: 'Território & Mapa', icon: Globe2, badge: 'ECO-MAP / CITIZEN' },
-    { id: 'analise', label: 'Diagnóstico & Simulação', icon: Cpu, badge: 'ECO-DIAG / SIM' },
-    { id: 'dashboard', label: 'Painel Analítico', icon: BarChart3, badge: 'ECO-DASH' },
-    { id: 'projetos', label: 'Ação & Projetos', icon: TreePine, badge: 'ECO-PROJECTS / ACTION' },
-    { id: 'participacao', label: 'Voluntariado & Selo', icon: Users, badge: 'VOLUNTEER / CERT' },
-    { id: 'alertas', label: 'Alertas & Defesa', icon: ShieldAlert, badge: `${urgentAlertCount} Ativos`, urgent: urgentAlertCount > 0 },
+    { id: 'dashboard', label: 'Dashboard Principal', icon: LayoutDashboard, badge: 'MOCKUP UI' },
+    { id: 'territorio', label: 'Território & Mapa', icon: Globe2, badge: 'ECO-MAP' },
+    { id: 'projetos', label: 'Ação & Projetos', icon: TreePine, badge: 'PROJETOS' },
+    { id: 'analise', label: 'Diagnóstico & Simulação', icon: Cpu, badge: 'SIMULADOR' },
+    { id: 'alertas', label: 'Alertas & Avisos', icon: ShieldAlert, badge: '3 Ativos', urgent: true },
+    { id: 'ecobot', label: 'EcoBot Gemini', icon: Sparkles, badge: 'AI & MAPS' },
+    { id: 'mockups', label: 'Modelos de Interface', icon: Layers, badge: 'UI DESIGNS' },
+    { id: 'php-mysql', label: 'PHP & MySQL', icon: Database, badge: 'LAMP STACK' },
+    { id: 'participacao', label: 'Voluntariado & Selo', icon: Users, badge: 'COMUNIDADE' },
     { id: 'educacao', label: 'Educação & Fórum', icon: Compass, badge: 'ECO-EDU' },
-    { id: 'dados-api', label: 'Dados & API', icon: FileSpreadsheet, badge: 'ECO-DATA / API' }
+    { id: 'forms', label: 'Google Forms', icon: ClipboardList, badge: 'INQUÉRITOS' }
   ];
 
   return (
@@ -109,19 +119,18 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Main Header Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16 gap-3">
           {/* Logo & Brand */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-3 shrink-0">
             <button
-              onClick={() => setActiveTab('territorio')}
+              onClick={() => setActiveTab('dashboard')}
               className="flex items-center space-x-3 text-left focus:outline-none"
             >
               <img
                 src="/assets/img/imagens/logo/ECOMZ-LOGO-09.svg"
                 alt="ECO-MZ 360 Logo"
-                className="h-11 w-auto max-w-[170px] sm:max-w-[210px] object-contain"
+                className="h-10 w-auto max-w-[160px] sm:max-w-[190px] object-contain"
                 onError={(e) => {
-                  // Fallback to text + icon if svg rendering fails
                   const target = e.currentTarget;
                   target.style.display = 'none';
                 }}
@@ -137,26 +146,38 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
           </div>
 
+          {/* Search Bar (Matching Mockup 17_08_41 & 17_13_44) */}
+          <div className="hidden md:flex items-center flex-1 max-w-xs mx-2">
+            <div className="relative w-full">
+              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Pesquisar no sistema..."
+                className="w-full pl-8 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-emerald-500 focus:bg-white transition-all"
+              />
+            </div>
+          </div>
+
           {/* Desktop Navigation Links */}
-          <nav className="hidden xl:flex items-center space-x-1">
-            {navItems.map((item) => {
+          <nav className="hidden 2xl:flex items-center space-x-0.5">
+            {navItems.slice(0, 7).map((item) => {
               const Icon = item.icon;
               const isActive = activeTab === item.id;
               return (
                 <button
                   key={item.id}
                   onClick={() => setActiveTab(item.id)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all ${
+                  className={`px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center space-x-1.5 transition-all ${
                     isActive
                       ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 shadow-xs'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'text-emerald-600' : 'text-slate-400'}`} />
+                  <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-emerald-600' : 'text-slate-400'}`} />
                   <span>{item.label}</span>
                   {item.urgent && (
                     <span className="ml-1 px-1.5 py-0.2 bg-rose-500 text-white text-[9px] rounded-full font-bold animate-pulse">
-                      {item.badge}
+                      3
                     </span>
                   )}
                 </button>
@@ -164,46 +185,67 @@ export const Navbar: React.FC<NavbarProps> = ({
             })}
           </nav>
 
-          {/* Right Action: Role Selector & Assistant Button */}
-          <div className="flex items-center space-x-2">
-            {/* User Role Switcher Dropdown */}
-            <div className="relative inline-block text-left">
-              <label htmlFor="role-select" className="sr-only">Perfil de Utilizador</label>
-              <div className="flex items-center space-x-1 bg-slate-100 px-2 py-1 rounded-lg border border-slate-200">
-                <Users className="w-3.5 h-3.5 text-slate-500" />
-                <select
-                  id="role-select"
-                  value={activeRole}
-                  onChange={(e) => setActiveRole(e.target.value as UserRole)}
-                  className="bg-transparent text-xs font-semibold text-slate-700 focus:outline-none cursor-pointer pr-1"
-                >
-                  <option value="cidadao">Cidadão</option>
-                  <option value="tecnico">Técnico</option>
-                  <option value="gestor">Gestor</option>
-                  <option value="instituicao">Instituição</option>
-                  <option value="admin">Administrador</option>
-                </select>
-              </div>
+          {/* Right Action: Weather, Alerts Bell, EcoBot & Profile (Matching Mockups) */}
+          <div className="flex items-center space-x-2 shrink-0">
+            {/* Weather & Time Widget (Exact text from mockup 17_13_44) */}
+            <div className="hidden lg:flex items-center space-x-1.5 bg-slate-50 border border-slate-200 px-2.5 py-1 rounded-xl text-[11px] text-slate-600">
+              <Sun className="w-3.5 h-3.5 text-amber-500" />
+              <span className="font-medium">Seg, 26 de Maio de 2025 • 14:35</span>
             </div>
 
-            {/* EcoBot Trigger */}
+            {/* Notification Bell with Badge 3 (From mockups) */}
+            <button
+              onClick={() => setActiveTab('alertas')}
+              className="relative p-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition-colors border border-transparent hover:border-slate-200"
+              title="3 Alertas Ativos no Sistema"
+            >
+              <Bell className="w-4 h-4" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500 animate-ping" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-rose-500" />
+            </button>
+
+            {/* Chat Icon / EcoBot Trigger */}
             <button
               onClick={() => setActiveTab('ecobot')}
-              className={`p-2 rounded-lg text-xs font-medium flex items-center space-x-1.5 border transition-all ${
+              className={`p-2 rounded-xl text-xs font-medium flex items-center space-x-1.5 border transition-all ${
                 activeTab === 'ecobot'
-                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-sm'
+                  ? 'bg-emerald-600 text-white border-emerald-600 shadow-xs'
                   : 'bg-emerald-50 text-emerald-700 border-emerald-200 hover:bg-emerald-100'
               }`}
-              title="Abrir Assistente EcoBot MZ"
+              title="Abrir Assistente EcoBot MZ com Gemini"
             >
               <Sparkles className="w-4 h-4" />
-              <span className="hidden sm:inline font-semibold">EcoBot MZ</span>
+              <span className="hidden sm:inline font-bold">EcoBot MZ</span>
             </button>
+
+            {/* User Profile Pill: Noé Samuel (Administrador) as in mockups */}
+            <div className="flex items-center space-x-2 pl-2 border-l border-slate-200">
+              <div className="w-8 h-8 rounded-full bg-emerald-700 text-white flex items-center justify-center font-bold text-xs ring-2 ring-emerald-200">
+                NS
+              </div>
+              <div className="hidden sm:block text-left">
+                <p className="text-xs font-bold text-slate-900 leading-tight">Noé Samuel</p>
+                <div className="flex items-center space-x-1">
+                  <select
+                    id="role-select"
+                    value={activeRole}
+                    onChange={(e) => setActiveRole(e.target.value as UserRole)}
+                    className="bg-transparent text-[10px] text-slate-500 font-semibold focus:outline-none cursor-pointer p-0"
+                  >
+                    <option value="admin">Administrador</option>
+                    <option value="gestor">Gestor</option>
+                    <option value="tecnico">Técnico</option>
+                    <option value="cidadao">Cidadão</option>
+                    <option value="instituicao">Instituição</option>
+                  </select>
+                </div>
+              </div>
+            </div>
 
             {/* Mobile menu toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="xl:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none"
+              className="2xl:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 focus:outline-none"
               aria-label="Abrir menu"
             >
               {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -214,7 +256,7 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white border-t border-slate-200 px-4 pt-2 pb-4 space-y-1">
+        <div className="2xl:hidden bg-white border-t border-slate-200 px-4 pt-2 pb-4 space-y-1">
           <div className="py-2 mb-2 border-b border-slate-100">
             <p className="text-xs font-semibold text-slate-500 mb-1">Mudar Etapa do Ciclo:</p>
             <div className="flex flex-wrap gap-1">
